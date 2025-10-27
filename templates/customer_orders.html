@@ -19,11 +19,12 @@
         </header>
 
         <!-- フィルター -->
-        <div class="orders-filters">
+        <div class="card filter-card">
+            <form id="filterForm" class="orders-filters">
                 <div class="filter-group">
-                    <label for="statusFilter">ステータスで絞り込み</label>
-                    <select id="statusFilter" class="form-control">
-                        <option value="">全ての注文</option>
+                    <label for="statusFilter">ステータス</label>
+                    <select id="statusFilter" name="status" class="form-control" aria-label="ステータスで絞り込み">
+                        <option value="">すべて</option>
                         <option value="pending">注文受付</option>
                         <option value="ready">準備完了</option>
                         <option value="completed">受取完了</option>
@@ -31,14 +32,15 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label for="dateFromFilter">期間で絞り込み(開始日)</label>
-                    <input type="date" id="dateFromFilter" class="form-control">
+                    <label for="startDate">開始日</label>
+                    <input type="date" id="startDate" name="start_date" class="form-control" aria-label="期間の開始日">
                 </div>
                 <div class="filter-group">
-                    <label for="dateToFilter">期間で絞り込み(終了日)</label>
-                    <input type="date" id="dateToFilter" class="form-control">
+                    <label for="endDate">終了日</label>
+                    <input type="date" id="endDate" name="end_date" class="form-control" aria-label="期間の終了日">
                 </div>
-            </div>
+            </form>
+        </div>
 
             <!-- 注文リスト -->
             <div id="ordersList" class="orders-list">
