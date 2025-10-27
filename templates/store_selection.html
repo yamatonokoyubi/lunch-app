@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗を選択 - 弁当注文システム</title>
+    <link rel="stylesheet" href="/static/css/universal_header.css">
+    <link rel="stylesheet" href="/static/css/store_selection.css">
+</head>
+<body class="page-stores">
+    <!-- ユニバーサルヘッダー -->
+    {% include "components/universal_header.html" %}
+    
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="site-title">🍱 お弁当注文システム</h1>
+                <p class="site-description">お好きな店舗を選んでご注文ください</p>
+            </div>
+        </header>
+
+        <!-- 検索バー -->
+        <div class="search-section">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="店舗名または住所で検索..."
+                    autocomplete="off"
+                >
+                <button class="search-button" onclick="searchStores()">
+                    🔍 検索
+                </button>
+            </div>
+            
+            <div class="filter-container">
+                <label class="filter-label">
+                    <input 
+                        type="checkbox" 
+                        id="activeOnlyFilter" 
+                        checked 
+                        onchange="searchStores()"
+                    >
+                    営業中の店舗のみ表示
+                </label>
+            </div>
+        </div>
+
+        <!-- ローディング表示 -->
+        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <div class="spinner"></div>
+            <p>店舗情報を読み込んでいます...</p>
+        </div>
+
+        <!-- エラー表示 -->
+        <div id="errorMessage" class="error-message" style="display: none;">
+            <p id="errorText"></p>
+            <button onclick="loadStores()" class="retry-button">再試行</button>
+        </div>
+
+        <!-- 店舗一覧 -->
+        <div id="storesContainer" class="stores-grid">
+            <!-- JavaScriptで動的に生成 -->
+        </div>
+
+        <!-- 結果が0件の場合 -->
+        <div id="noResultsMessage" class="no-results" style="display: none;">
+            <p>条件に合う店舗が見つかりませんでした</p>
+            <p class="no-results-hint">検索条件を変更してお試しください</p>
+        </div>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/universal_header.js"></script>
+    <script src="/static/js/cart_badge.js"></script>
+    <script src="/static/js/store_selection.js"></script>
+</body>
+</html>

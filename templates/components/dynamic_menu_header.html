@@ -1,0 +1,265 @@
+<!-- 統一メニューページ用 動的ヘッダーコンポーネント -->
+<header class="menu-header" id="menuHeader">
+    <div class="header-container">
+        <div class="header-left">
+            <a href="/" class="logo">
+                <span class="logo-icon">🍱</span>
+                <span class="logo-text">弁当注文</span>
+            </a>
+        </div>
+        
+        <nav class="header-nav">
+            <a href="/stores" class="nav-link">
+                <span class="nav-icon">📍</span>
+                <span class="nav-text">店舗選択</span>
+            </a>
+            <a href="/menus" class="nav-link active">
+                <span class="nav-icon">📋</span>
+                <span class="nav-text">メニュー</span>
+            </a>
+            
+            <!-- ログイン時のみ表示: 注文履歴 -->
+            <a href="/customer/orders" class="nav-link" id="ordersLink" style="display: none;">
+                <span class="nav-icon">📜</span>
+                <span class="nav-text">注文履歴</span>
+            </a>
+        </nav>
+
+        <div class="header-right">
+            <!-- カート -->
+            <a href="/cart" class="nav-link cart-link">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-text">カート</span>
+                <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+            </a>
+
+            <!-- ログイン状態での表示 -->
+            <div class="user-section" id="userSection" style="display: none;">
+                <span class="user-name" id="userName">ゲスト</span>
+                <button class="btn-logout" id="logoutBtn">ログアウト</button>
+            </div>
+
+            <!-- ログアウト状態での表示 -->
+            <div class="auth-section" id="authSection" style="display: none;">
+                <a href="/login" class="btn-login">ログイン</a>
+                <a href="/register" class="btn-register">新規会員登録</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+.menu-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.25rem;
+    transition: opacity 0.2s;
+}
+
+.logo:hover {
+    opacity: 0.9;
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    position: relative;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-weight: 600;
+}
+
+.nav-icon {
+    font-size: 1.1rem;
+}
+
+.cart-link {
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ff4757;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* ユーザーセクション（ログイン時） */
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-name {
+    color: white;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.user-name::before {
+    content: "👤 ";
+}
+
+.btn-logout {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* 認証セクション（ログアウト時） */
+.auth-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-login,
+.btn-register {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-login {
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-login:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-register {
+    background: white;
+    color: #667eea;
+    border: 1px solid white;
+}
+
+.btn-register:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .header-container {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .header-nav {
+        order: 3;
+        width: 100%;
+        justify-content: space-around;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-text {
+        display: none;
+    }
+
+    .nav-icon {
+        font-size: 1.3rem;
+    }
+
+    .user-name {
+        font-size: 0.85rem;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .btn-login,
+    .btn-register,
+    .btn-logout {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+</style>

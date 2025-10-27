@@ -1,0 +1,433 @@
+/**
+ * ゲストカートページ スタイルシート
+ */
+
+body.page-cart {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.page-cart .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 60px; /* 上部40px、左右24px、下部60px */
+}
+
+/* ページヘッダーの上部余白を調整 */
+.page-cart .page-header {
+    margin-top: 40px; /* 固定ヘッダーとの十分な間隔を確保 */
+}
+
+/* ===== ページヘッダー ===== */
+/* ===== ページヘッダー（common.cssで定義済み） ===== */
+
+/* ===== ローディング ===== */
+.loading {
+    text-align: center;
+    padding: 60px 32px; /* より広いパディング */
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* 上部に余白を追加 */
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px; /* スピナーとテキストの間隔 */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== エラー表示 ===== */
+.error-message {
+    background: #fee;
+    border: 2px solid #fcc;
+    border-radius: 10px;
+    padding: 24px; /* より広いパディング */
+    margin-top: 20px; /* 上部に余白を追加 */
+    text-align: center;
+    color: #c33;
+}
+
+.error-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 16px; /* アイコンとテキストの間隔 */
+}
+
+/* ===== 空のカート ===== */
+.empty-cart {
+    background: white;
+    border-radius: 15px;
+    padding: 80px 32px; /* より広い内部余白 */
+    margin-top: 20px; /* 上部に余白を追加 */
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+    font-size: 5rem;
+    margin-bottom: 20px; /* アイコンとタイトルの間隔 */
+}
+
+.empty-cart h2 {
+    color: #333;
+    margin-bottom: 12px; /* タイトルと説明文の間隔 */
+}
+
+.empty-cart p {
+    color: #666;
+    margin-bottom: 32px; /* 説明文とボタンの間隔 */
+}
+
+/* ===== カート内容 ===== */
+.cart-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px; /* カード間の余白を増やす */
+}
+
+/* ===== 店舗情報カード ===== */
+.store-info-card {
+    background: white;
+    border-radius: 15px;
+    padding: 24px; /* より広いパディング */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.store-info-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 8px; /* 余白を増やす */
+}
+
+.store-icon {
+    font-size: 1.2rem;
+}
+
+.store-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ===== カートアイテム ===== */
+.cart-items {
+    background: white;
+    border-radius: 15px;
+    padding: 24px; /* より広いパディング */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item {
+    display: flex;
+    gap: 20px; /* アイテム間の余白を増やす */
+    padding: 20px 0; /* 上下のパディングを増やす */
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0; /* 最後のアイテムは下部余白なし */
+}
+
+.cart-item:first-child {
+    padding-top: 0; /* 最初のアイテムは上部余白なし */
+}
+
+.item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #f3f4f6;
+}
+
+.item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 詳細情報の間隔を増やす */
+}
+
+.item-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.item-price {
+    font-size: 1rem;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* コントロール間の余白を増やす */
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 0.25rem;
+}
+
+.btn-quantity {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: white;
+    color: #667eea;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-quantity:hover {
+    background: #667eea;
+    color: white;
+}
+
+.btn-quantity:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.quantity-value {
+    min-width: 40px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+.btn-remove {
+    padding: 0.5rem 1rem;
+    background: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-remove:hover {
+    background: #fcc;
+}
+
+.item-subtotal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.item-subtotal-label {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.item-subtotal-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ===== 合計金額 ===== */
+.cart-summary {
+    background: white;
+    border-radius: 15px;
+    padding: 24px; /* より広いパディング */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0; /* 行間の余白を増やす */
+    font-size: 1.1rem;
+}
+
+.summary-row.total {
+    border-top: 2px solid #e5e7eb;
+    margin-top: 8px; /* 境界線の上部余白 */
+    padding-top: 16px; /* 境界線の下部余白 */
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.summary-label {
+    color: #666;
+}
+
+.summary-value {
+    color: #667eea;
+    font-weight: bold;
+}
+
+.summary-row.total .summary-value {
+    font-size: 1.5rem;
+}
+
+/* ===== アクションボタン ===== */
+.cart-actions {
+    display: flex;
+    gap: 16px; /* ボタン間の余白を増やす */
+    margin-top: 8px; /* 上部に余白を追加 */
+}
+
+.btn-primary,
+.btn-secondary {
+    flex: 1;
+    padding: 16px 32px; /* より広いパディング */
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+    background: #f3f4f6;
+}
+
+/* ===== トースト通知 ===== */
+.toast {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: #333;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: none;
+    animation: slideIn 0.3s ease;
+    z-index: 2000;
+}
+
+.toast.show {
+    display: block;
+}
+
+.toast.error {
+    background: #c33;
+}
+
+.toast.success {
+    background: #2d7;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ===== レスポンシブ ===== */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .cart-item {
+        flex-direction: column;
+    }
+
+    .item-image {
+        width: 100%;
+        height: 200px;
+    }
+
+    .item-controls {
+        justify-content: space-between;
+    }
+
+    .item-subtotal {
+        align-items: flex-start;
+    }
+
+    .cart-actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
+
+    .store-info-card,
+    .cart-items,
+    .cart-summary {
+        padding: 1rem;
+    }
+
+    .summary-row.total .summary-value {
+        font-size: 1.3rem;
+    }
+}

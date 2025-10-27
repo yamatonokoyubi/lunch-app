@@ -1,0 +1,335 @@
+/* 店舗選択画面のスタイル */
+
+body.page-stores {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.page-stores .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 0; /* 上部に40pxの余白を追加 */
+}
+
+/* ========================================
+   ページ固有スタイル
+======================================== */
+
+/* ページヘッダーの上部余白を調整 */
+.page-stores .header {
+    margin-top: 40px; /* 固定ヘッダーとの十分な間隔を確保 */
+}
+
+/* 検索セクション */
+.search-section {
+    background: white;
+    border-radius: 15px;
+    padding: 28px; /* より広い内部余白 */
+    margin-bottom: 36px; /* 店舗グリッドとの余白 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-button {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.search-button:hover {
+    transform: scale(1.05);
+}
+
+.search-button:active {
+    transform: scale(0.98);
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.filter-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* ローディング */
+.loading-indicator {
+    text-align: center;
+    padding: 80px 20px; /* より広い上下の余白 */
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* 上部に余白を追加 */
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 24px; /* スピナーとテキストの間隔 */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* エラーメッセージ */
+.error-message {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    padding: 24px; /* より広い内部余白 */
+    margin-top: 20px; /* 上部に余白を追加 */
+    text-align: center;
+    color: #856404;
+}
+
+.retry-button {
+    margin-top: 16px; /* ボタンの上部余白を増やす */
+    padding: 12px 24px; /* ボタンのパディングを広げる */
+    background: #ffc107;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.retry-button:hover {
+    background: #e0a800;
+}
+
+/* 店舗グリッド */
+.stores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 32px; /* グリッド間隔を広げる */
+    margin-bottom: 60px; /* 下部に十分な余白 */
+}
+
+.store-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.store-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.store-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.store-content {
+    padding: 24px; /* カード内部の余白を増やす */
+}
+
+.store-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.store-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.store-status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-closed {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.store-info {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 16px; /* 余白を増やす */
+}
+
+.store-info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px; /* アイテム間の余白を増やす */
+    gap: 8px;
+}
+
+.store-info-item .icon {
+    flex-shrink: 0;
+    width: 20px;
+}
+
+.store-description {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 18px; /* より広い余白 */
+    line-height: 1.6; /* 行間を少し広げる */
+    max-height: 3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.store-hours {
+    color: #667eea;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 18px; /* より広い余白 */
+}
+
+.select-button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.select-button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.select-button:active {
+    transform: scale(0.98);
+}
+
+.select-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 結果なし */
+.no-results {
+    text-align: center;
+    padding: 80px 32px; /* より広い内部余白 */
+    margin-top: 20px; /* 上部に余白を追加 */
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.no-results p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 16px; /* 段落間の余白を増やす */
+}
+
+.no-results-hint {
+    font-size: 0.95rem;
+    color: #999;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px; /* モバイルでは左右の余白を少し狭める */
+    }
+
+    .page-stores .header {
+        margin-top: 24px; /* モバイルでは上部余白を調整 */
+        margin-bottom: 32px;
+    }
+
+    .header-content {
+        padding: 32px 24px; /* モバイルでのパディング調整 */
+    }
+
+    .site-title {
+        font-size: 1.8rem;
+    }
+
+    .stores-grid {
+        grid-template-columns: 1fr;
+        gap: 24px; /* モバイルでのグリッド間隔 */
+        margin-bottom: 40px;
+    }
+
+    .search-section {
+        padding: 20px; /* モバイルでのパディング調整 */
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+
+    .search-button {
+        width: 100%;
+    }
+
+    .store-content {
+        padding: 20px; /* モバイルでのカードパディング */
+    }
+}

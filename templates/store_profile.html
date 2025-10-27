@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店�E惁E�� - 弁当注斁E��スチE��</title>
+    <link rel="stylesheet" href="/static/css/store_common.css">
+    <link rel="stylesheet" href="/static/css/store_profile.css">
+</head>
+<body>
+    <div class="container">
+        {% set active_page = 'profile' %}
+        {% include 'includes/store_header.html' %}
+
+        <main class="main">
+            <section class="store-profile-header">
+                <h2>🏪 店�E惁E��</h2>
+                <p id="page-description">店�Eの基本惁E��を確認�E編雁E/p>
+            </section>
+
+            <!-- Owner専用: 店�E選択ドロチE�Eダウン -->
+            <div id="store-selector-section" class="store-selector-section" style="display: none;">
+                <div class="store-selector-container">
+                    <label for="store-selector" class="store-selector-label">
+                        🏪 表示する店�Eを選抁E
+                    </label>
+                    <select id="store-selector" class="store-selector">
+                        <option value="">読込中...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- ローチE��ング表示 -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>読み込み中...</p>
+            </div>
+
+            <!-- エラー表示 -->
+            <div id="error-message" class="error-message" style="display: none;">
+                <p id="error-text"></p>
+            </div>
+
+            <!-- 成功メチE��ージ -->
+            <div id="success-message" class="success-message" style="display: none;">
+                <p id="success-text"></p>
+            </div>
+
+            <!-- 店�E惁E��コンチE��チE-->
+            <div id="store-content" style="display: none;">
+                <!-- 店�E画像セクション -->
+                <section class="store-image-section">
+                    <div class="image-container">
+                        <img id="store-image" src="/static/images/no-image.svg" alt="店�E画僁E class="store-image">
+                        <div id="image-upload-section" class="image-upload-section" style="display: none;">
+                            <label for="image-file" class="upload-button">
+                                📷 画像を変更
+                                <input type="file" id="image-file" accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
+                            </label>
+                            <button id="delete-image-button" class="delete-image-button" style="display: none;">
+                                🗑�E�E画像を削除
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 店�E惁E��フォーム -->
+                <section class="store-info-section">
+                    <form id="store-form">
+                        <!-- 基本惁E�� -->
+                        <div class="form-section">
+                            <h3>📋 基本惁E��</h3>
+                            
+                            <div class="form-group">
+                                <label for="store-name">店�E吁E<span class="required">*</span></label>
+                                <input type="text" id="store-name" name="name" class="form-control" required disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="store-email">メールアドレス</label>
+                                <input type="email" id="store-email" name="email" class="form-control" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="store-phone">電話番号</label>
+                                <input type="tel" id="store-phone" name="phone_number" class="form-control" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="store-address">住所</label>
+                                <textarea id="store-address" name="address" class="form-control" rows="2" disabled></textarea>
+                            </div>
+                        </div>
+
+                        <!-- 営業時間 -->
+                        <div class="form-section">
+                            <h3>⏰ 営業時間</h3>
+                            
+                            <div class="time-group">
+                                <div class="form-group">
+                                    <label for="opening-time">開店時閁E/label>
+                                    <input type="time" id="opening-time" name="opening_time" class="form-control" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="closing-time">閉店時閁E/label>
+                                    <input type="time" id="closing-time" name="closing_time" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 店�E説昁E-->
+                        <div class="form-section">
+                            <h3>📝 店�E説昁E/h3>
+                            
+                            <div class="form-group">
+                                <label for="store-description">説明文</label>
+                                <textarea id="store-description" name="description" class="form-control" rows="4" disabled placeholder="店�Eの特徴めE��だわりをご紹介ください"></textarea>
+                                <small class="form-help">最大1000斁E��まで</small>
+                            </div>
+                        </div>
+
+                        <!-- スチE�Eタス -->
+                        <div class="form-section">
+                            <h3>🔄 スチE�Eタス</h3>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="store-active" name="is_active" disabled>
+                                    <span>店�Eを営業中にする</span>
+                                </label>
+                                <small class="form-help">チェチE��を外すと、お客様から�E注斁E��一時的に受け付けなくなりまぁE/small>
+                            </div>
+                        </div>
+
+                        <!-- 保存�Eタン�E�Ewner/Managerのみ表示�E�E-->
+                        <div id="save-button-section" class="form-actions" style="display: none;">
+                            <button type="button" id="cancel-button" class="button button-secondary">
+                                キャンセル
+                            </button>
+                            <button type="submit" id="save-button" class="button button-primary">
+                                💾 変更を保孁E
+                            </button>
+                        </div>
+
+                        <!-- 読み取り専用メチE��ージ�E�Etaffに表示�E�E-->
+                        <div id="readonly-message" class="readonly-message" style="display: none;">
+                            <p>ℹ�E�Eこ�E惁E��は閲覧のみ可能です。編雁E��限がありません、E/p>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- メタ惁E�� -->
+                <section class="meta-info">
+                    <p><small>作�E日晁E <span id="created-at"></span></small></p>
+                    <p><small>最終更新: <span id="updated-at"></span></small></p>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/store_profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # PostgreSQLデータベース
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: bento_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPIアプリケーション (開発環境用)
+  web:
+    build: ..
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/bento_db
+      - SECRET_KEY=your-secret-key-change-this-in-production
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+    volumes:
+      - ..:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        python -c 'import time; import psycopg2; 
+        for i in range(30):
+          try:
+            conn = psycopg2.connect(
+              host=\"db\", 
+              database=\"bento_db\", 
+              user=\"postgres\", 
+              password=\"password\"
+            )
+            conn.close()
+            print(\"Database is ready!\")
+            break
+          except psycopg2.OperationalError:
+            print(f\"Database not ready, waiting... ({i+1}/30)\")
+            time.sleep(2)
+        else:
+          print(\"Database connection failed after 30 attempts\")
+          exit(1)' &&
+        echo 'Initializing database...' &&
+        python init_data.py &&
+        echo 'Starting application...' &&
+        uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+volumes:
+  postgres_data:

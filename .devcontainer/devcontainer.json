@@ -1,0 +1,62 @@
+{
+    "name": "弁当注文システム開発環境",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "web",
+    "workspaceFolder": "/app",
+    "shutdownAction": "stopCompose",
+    
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.linting.enabled": true,
+                "python.linting.pylintEnabled": false,
+                "python.linting.flake8Enabled": true,
+                "python.formatting.provider": "black",
+                "python.formatting.blackArgs": ["--line-length=88"],
+                "editor.formatOnSave": true,
+                "editor.codeActionsOnSave": {
+                    "source.organizeImports": true
+                },
+                "files.associations": {
+                    "*.html": "html",
+                    "*.css": "css",
+                    "*.js": "javascript"
+                }
+            },
+            
+            "extensions": [
+                "ms-python.python",
+                "ms-python.black-formatter",
+                "ms-python.flake8",
+                "ms-python.isort",
+                "bradlc.vscode-tailwindcss",
+                "esbenp.prettier-vscode",
+                "ms-vscode.vscode-json",
+                "redhat.vscode-yaml",
+                "ms-vscode.vscode-thunder-client",
+                "humao.rest-client"
+            ]
+        }
+    },
+    
+    "forwardPorts": [8000, 5432],
+    "portsAttributes": {
+        "8000": {
+            "label": "FastAPI Application",
+            "onAutoForward": "openBrowser"
+        },
+        "5432": {
+            "label": "PostgreSQL Database"
+        }
+    },
+    
+    "postCreateCommand": "pip install -r requirements.txt",
+    
+    "remoteUser": "root"
+}

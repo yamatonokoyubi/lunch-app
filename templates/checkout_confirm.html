@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注文確認 - 弁当注文システム</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/universal_header.css">
+    <link rel="stylesheet" href="/static/css/checkout_confirm.css">
+</head>
+<body class="page-checkout">
+    <!-- ユニバーサルヘッダー -->
+    {% include "components/universal_header.html" %}
+    
+    <div class="container">
+        <div class="page-header">
+            <h1>📋 注文確認</h1>
+            <p>ご注文内容をご確認の上、確定してください</p>
+        </div>
+
+        <div class="loading" id="loading">
+            <p>読み込み中...</p>
+        </div>
+
+        <div class="empty-cart" id="emptyCart" style="display: none;">
+            <div class="empty-icon">🛒</div>
+            <h2>カートが空です</h2>
+            <p>メニューページから商品を追加してください</p>
+            <a href="/menus" class="btn btn-primary">メニューを見る</a>
+        </div>
+
+        <div id="orderContent" style="display: none;">
+            <div class="user-info">
+                <h3>👤 ご注文者情報</h3>
+                <div id="userDetails">読み込み中...</div>
+            </div>
+
+            <div class="order-summary">
+                <h2>📦 ご注文内容</h2>
+                <div id="orderItems"></div>
+                <div class="total-section">
+                    <span class="total-label">合計金額</span>
+                    <span class="total-amount" id="totalAmount">¥0</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/cart" class="btn btn-secondary">カートに戻る</a>
+                <button class="btn btn-primary" id="confirmOrderBtn">注文を確定する</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/universal_header.js"></script>
+    <script src="/static/js/cart_badge.js"></script>
+    <script src="/static/js/checkout_confirm.js"></script>
+</body>
+</html>

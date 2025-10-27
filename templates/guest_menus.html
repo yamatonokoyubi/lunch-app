@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メニュー一覧 - 弁当注文システム</title>
+    <link rel="stylesheet" href="/static/css/guest_menus.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    {% include "components/guest_header.html" %}
+
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="page-header">
+            <div class="page-header-main">
+                <h1>🍱 メニュー一覧</h1>
+                <p class="subtitle">お好きなお弁当をお選びください</p>
+            </div>
+            <div class="store-info-header">
+                <div class="store-info">
+                    <span class="store-icon">📍</span>
+                    <span class="store-label">受け取り店舗:</span>
+                    <span class="store-name" id="storeName">読み込み中...</span>
+                </div>
+                <button class="btn-change-store" id="changeStoreBtn">
+                    変更
+                </button>
+            </div>
+        </header>
+
+        <!-- カテゴリフィルタ -->
+        <div class="category-filter" id="categoryFilter">
+            <!-- カテゴリボタンは動的に追加されます -->
+        </div>
+
+        <!-- メニュー一覧 -->
+        <div class="menu-grid" id="menuGrid">
+            <!-- ローディング表示 -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>メニューを読み込み中...</p>
+            </div>
+
+            <!-- エラー表示 -->
+            <div class="error-message" id="errorMessage" style="display: none;">
+                <span class="error-icon">⚠️</span>
+                <p id="errorText"></p>
+                <button class="btn-retry" onclick="location.reload()">
+                    再読み込み
+                </button>
+            </div>
+
+            <!-- メニューカードはJavaScriptで動的に生成されます -->
+        </div>
+
+        <!-- 空状態 -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">🍱</div>
+            <h3>メニューが見つかりませんでした</h3>
+            <p>別のカテゴリをお試しください</p>
+        </div>
+    </div>
+
+    <!-- カート追加成功通知 -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message" id="toastMessage"></span>
+    </div>
+
+    <script src="/static/js/guest_menus.js"></script>
+</body>
+</html>

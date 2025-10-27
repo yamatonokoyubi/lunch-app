@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗ダッシュボード - 弁当注文システム</title>
+    
+    <!-- パフォーマンス最適化: DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    
+    <!-- 店舗管理専用CSS -->
+    <link rel="stylesheet" href="/static/css/store_common.css">
+    <link rel="stylesheet" href="/static/css/store_dashboard.css">
+    
+    <!-- Chart.js CDN: 遅延読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        {% set active_page = 'dashboard' %}
+        {% include 'includes/store_header.html' %}
+
+        <main class="main">
+            <section class="store-dashboard-header">
+                <div class="store-dashboard-header-content">
+                    <div>
+                        <h2>📊 ダッシュボード</h2>
+                        <p>店舗の運営状況を一目で確認</p>
+                    </div>
+                    <div class="last-updated">
+                        <span class="last-updated-label">最終更新:</span>
+                        <span class="last-updated-time" id="lastUpdatedTime">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ローディングインジケーター -->
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>データを読み込み中...</p>
+            </div>
+
+            <!-- エラーメッセージ表示エリア -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <section class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-content">
+                        <h3>今日の注文</h3>
+                        <p class="stat-number" id="total-orders">-</p>
+                        <p class="stat-change" id="orders-change">-</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <h3>今日の売上</h3>
+                        <p class="stat-number" id="total-revenue">-</p>
+                        <p class="stat-change" id="revenue-change">-</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-content">
+                        <h3>待機中注文</h3>
+                        <p class="stat-number" id="pending-orders">-</p>
+                        <p class="stat-change" id="average-order-value">-</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🍱</div>
+                    <div class="stat-content">
+                        <h3>人気メニュー</h3>
+                        <p class="stat-text" id="top-menu-name">-</p>
+                        <p class="stat-change" id="top-menu-count">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-content">
+                <div class="dashboard-section">
+                    <h3>🔥 人気メニュートップ3</h3>
+                    <div class="popular-menus-list" id="popular-menus-list">
+                        <p class="loading-text">データを読み込み中...</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <h3>📈 今週の売上グラフ</h3>
+                    <div class="chart-container">
+                        <canvas id="weeklySalesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="quick-actions">
+                <h3>⚡ クイックアクション</h3>
+                <div class="action-buttons">
+                    <button class="action-btn primary" onclick="location.href='/store/orders'">
+                        📋 注文を確認
+                    </button>
+                    <button class="action-btn secondary" onclick="location.href='/store/menus'">
+                        🍱 メニュー編集
+                    </button>
+                    <button class="action-btn secondary" onclick="refreshDashboard()">
+                        🔄 データ更新
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        {% include 'includes/store_footer.html' %}
+        </div>
+
+    <!-- 共通JavaScript -->
+    <script src="/static/js/common.js?v=4"></script>
+    <!-- 店舗管理専用JavaScript -->
+    <script src="/static/js/store_header.js?v=4" defer></script>
+    <script src="/static/js/store_dashboard.js?v=3" defer></script>
+</body>
+</html>

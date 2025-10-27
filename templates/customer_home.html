@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メニュー一覧 - 弁当注文システム</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/customer_home.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/customer/home" class="logo">🍱 弁当注文システム</a>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="/customer/home">メニュー</a></li>
+                        <li><a href="/customer/orders">注文履歴</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <button type="button" id="cartBtn" class="btn btn-icon cart-button">
+                        🛒
+                        <span id="cartCount" class="cart-badge">0</span>
+                    </button>
+                    <span id="userInfo"></span>
+                    <button type="button" id="logoutBtn" class="btn btn-sm btn-secondary">ログアウト</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ページヘッダー -->
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">本日のメニュー</h1>
+            <p class="page-subtitle">お好みの弁当をお選びください</p>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <div class="container">
+            <!-- フィルター -->
+            <div class="menu-filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="searchInput">メニュー検索</label>
+                        <input type="text" id="searchInput" class="form-control" placeholder="メニュー名で検索...">
+                    </div>
+                    <div class="filter-group">
+                        <label>価格帯</label>
+                        <div class="price-range">
+                            <input type="number" id="priceMin" class="form-control" placeholder="最低価格" min="0">
+                            <span>〜</span>
+                            <input type="number" id="priceMax" class="form-control" placeholder="最高価格" min="0">
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>&nbsp;</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button type="button" id="filterBtn" class="btn btn-primary">検索</button>
+                            <button type="button" id="clearFilterBtn" class="btn btn-secondary">クリア</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 検索結果カウント -->
+            <div style="margin-bottom: 1rem;">
+                <span id="resultCount" class="text-muted"></span>
+            </div>
+
+            <!-- ローディングオーバーレイ -->
+            <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                <div class="spinner"></div>
+                <p>メニューを読み込み中...</p>
+            </div>
+
+            <!-- メニューグリッド -->
+            <div style="position: relative;">
+                <div id="menuGrid" class="menu-grid">
+                    <!-- メニューカードがここに動的に挿入される -->
+                </div>
+                
+                <!-- ローディングオーバーレイ -->
+                <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- ページネーション -->
+            <div id="pagination" class="d-flex justify-content-center mt-4">
+                <!-- ページネーションがここに動的に挿入される -->
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 弁当注文システム. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- カートモーダル -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content cart-modal">
+            <div class="modal-header">
+                <h2>🛒 ショッピングカート</h2>
+                <button type="button" class="close-btn" id="closeCartBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="cartItems" class="cart-items">
+                    <!-- カートアイテムがここに動的に表示されます -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="cart-total">
+                    <span>合計金額:</span>
+                    <span id="cartTotalPrice" class="total-price">¥0</span>
+                </div>
+                <div class="cart-actions">
+                    <button type="button" id="clearCartBtn" class="btn btn-secondary">カートをクリア</button>
+                    <button type="button" id="checkoutBtn" class="btn btn-primary">注文する</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/customer_home.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注文履歴 - 弁当注文システム</title>
+    <link rel="stylesheet" href="/static/css/universal_header.css">
+    <link rel="stylesheet" href="/static/css/customer_orders.css">
+</head>
+<body class="page-orders">
+    <!-- 共通ヘッダー -->
+    {% include "components/universal_header.html" %}
+
+    <div class="container">
+        <!-- ページヘッダー -->
+        <header class="page-header with-card">
+            <h1>📋 注文履歴</h1>
+            <p class="subtitle">過去の注文履歴を確認できます</p>
+        </header>
+
+        <!-- フィルター -->
+        <div class="orders-filters">
+                <div class="filter-group">
+                    <label for="statusFilter">ステータスで絞り込み</label>
+                    <select id="statusFilter" class="form-control">
+                        <option value="">全ての注文</option>
+                        <option value="pending">注文受付</option>
+                        <option value="ready">準備完了</option>
+                        <option value="completed">受取完了</option>
+                        <option value="cancelled">キャンセル</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dateFromFilter">期間で絞り込み(開始日)</label>
+                    <input type="date" id="dateFromFilter" class="form-control">
+                </div>
+                <div class="filter-group">
+                    <label for="dateToFilter">期間で絞り込み(終了日)</label>
+                    <input type="date" id="dateToFilter" class="form-control">
+                </div>
+            </div>
+
+            <!-- 注文リスト -->
+            <div id="ordersList" class="orders-list">
+                <!-- 注文履歴がここに動的に表示されます -->
+            </div>
+
+        <!-- ページネーション -->
+        <div id="pagination" class="pagination">
+            <!-- ページネーションがここに動的に表示されます -->
+        </div>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/universal_header.js"></script>
+    <script src="/static/js/cart_badge.js"></script>
+    <script src="/static/js/customer_orders.js"></script>
+</body>
+</html>

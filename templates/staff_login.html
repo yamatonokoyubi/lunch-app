@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>従業員ログイン - 弁当注文システム</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">🏪 弁当注文システム</div>
+            <h1 class="auth-title">従業員ログイン</h1>
+            <p class="auth-subtitle">店舗管理システムへのアクセス</p>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="username" class="form-label">ユーザー名</label>
+                    <input type="text" id="username" name="username" class="form-control" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">パスワード</label>
+                    <input type="password" id="password" name="password" class="form-control" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary auth-submit">ログイン</button>
+            </form>
+            
+            <div class="auth-links">
+                <p><a href="/password-reset-request">パスワードをお忘れですか？</a></p>
+            </div>
+            
+            <!-- デモアカウント（開発環境のみ表示） -->
+            <div class="demo-accounts">
+                <h4>デモアカウント</h4>
+                
+                <div class="demo-account">
+                    <div class="demo-account-info">
+                        <div class="demo-account-type">👨‍💼 管理者さん</div>
+                        <div class="demo-account-credentials">admin / admin@123</div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-secondary demo-login-btn" 
+                            data-username="admin" data-password="admin@123">ログイン</button>
+                </div>
+                
+                <div class="demo-account">
+                    <div class="demo-account-info">
+                        <div class="demo-account-type">👔 マネージャーさん</div>
+                        <div class="demo-account-credentials">store1 / password123</div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-secondary demo-login-btn" 
+                            data-username="store1" data-password="password123">ログイン</button>
+                </div>
+                
+                <div class="demo-account">
+                    <div class="demo-account-info">
+                        <div class="demo-account-type">👤 スタッフさん</div>
+                        <div class="demo-account-credentials">store2 / password123</div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-secondary demo-login-btn" 
+                            data-username="store2" data-password="password123">ログイン</button>
+                </div>
+            </div>
+            
+            <div class="auth-footer">
+                <p class="text-muted">
+                    <small>⚠️ このページは従業員専用です</small>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/common.js?v=4"></script>
+    <script src="/static/js/auth.js?v=3"></script>
+</body>
+</html>

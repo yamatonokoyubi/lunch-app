@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注文管理 - 弁当注文管理システム</title>
+    <link rel="stylesheet" href="/static/css/store_common.css">
+    <link rel="stylesheet" href="/static/css/store_orders.css">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+</head>
+<body>
+    <div class="container">
+        {% set active_page = 'orders' %}
+        {% include 'includes/store_header.html' %}
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- ページヘッダー -->
+            <section class="store-orders-header">
+                <div class="store-orders-header-content">
+                    <div>
+                        <h2>📦 注文管理</h2>
+                        <p>リアルタイムな注文状況の把握</p>
+                    </div>
+                    <div class="header-stats">
+                        <div class="header-badges">
+                            <span class="badge badge-info">全: <span id="totalOrdersCount">0</span>件</span>
+                            <span class="badge badge-warning">注文中: <span id="pendingOrdersCount">0</span>件</span>
+                            <span class="badge badge-success">準備完了: <span id="readyCount">0</span>件</span>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary sound-toggle" id="soundToggleBtn" title="通知音のON/OFF">
+                                🔔 通知音: ON
+                            </button>
+                            <button class="btn btn-secondary" id="refreshBtn" title="最新の状態に更新">
+                                🔄 更新
+                            </button>
+                            <div class="auto-refresh-status" id="autoRefreshStatus">
+                                <span class="status-text" id="autoRefreshText">自動更新: 停止中</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- フィルターセクション -->
+            <div class="filter-section">
+                <!-- 検索バーを最優先で配置 -->
+                <div class="filter-group filter-search-primary">
+                    <label for="searchInput">🔍 キーワード検索</label>
+                    <div class="search-input-wrapper">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="filter-input search-input" 
+                            placeholder="顧客名、メニュー名で検索..."
+                            autocomplete="off"
+                        >
+                        <button class="btn-clear" id="clearSearchBtn" title="検索をクリア" style="display: none;">
+                            ✁E
+                        </button>
+                    </div>
+                </div>
+
+                <!-- スチE�Eタスフィルタ�E�EスチE�Eタス対応！E-->
+                <div class="filter-group filter-status">
+                    <label>📋 注斁E��チE�Eタス</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="status-checkbox" value="pending" checked>
+                            <span>注斁E��仁E/span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="status-checkbox" value="ready" checked>
+                            <span>準備完亁E/span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="status-checkbox" value="completed">
+                            <span>受取完亁E/span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="status-checkbox" value="cancelled">
+                            <span>キャンセル</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 日付篁E��フィルタ�E�視覚的にグループ化�E�E-->
+                <div class="filter-group filter-date-range">
+                    <label>📅 注斁E��閁E/label>
+                    <div class="date-range-wrapper">
+                        <div class="date-input-group">
+                            <input type="date" id="startDate" class="filter-input date-input" placeholder="開始日">
+                        </div>
+                        <span class="date-separator">、E/span>
+                        <div class="date-input-group">
+                            <input type="date" id="endDate" class="filter-input date-input" placeholder="終亁E��">
+                        </div>
+                        <button class="btn-clear btn-clear-date" id="clearDateBtn" title="期間をクリア">
+                            ✁E
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ソート頁E-->
+                <div class="filter-group filter-sort">
+                    <label for="sortOrder">📊 並び頁E/label>
+                    <select id="sortOrder" class="filter-select">
+                        <option value="newest">新しい頁E/option>
+                        <option value="oldest">古ぁE��E/option>
+                        <option value="price_high">金額�E高い頁E/option>
+                        <option value="price_low">金額�E低い頁E/option>
+                    </select>
+                </div>
+
+                <!-- フィルタリセチE��ボタン -->
+                <div class="filter-group filter-actions">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-secondary btn-reset" id="resetFiltersBtn">
+                        🔄 すべてリセチE��
+                    </button>
+                </div>
+            </div>
+
+            <!-- 検索結果表示 -->
+            <div class="search-results-info" id="searchResultsInfo" style="display: none;">
+                <span class="results-count"></span>
+                <span class="active-filters"></span>
+            </div>
+
+            <!-- ローチE��ング表示 -->
+            <div class="loading-container" id="loadingContainer">
+                <div class="spinner"></div>
+                <p>注斁E��ータを読み込んでぁE��ぁE..</p>
+            </div>
+
+            <!-- エラー表示 -->
+            <div class="error-container" id="errorContainer" style="display: none;">
+                <div class="error-message">
+                    <span class="error-icon">⚠�E�E/span>
+                    <div class="error-content">
+                        <h3>チE�Eタの取得に失敗しました</h3>
+                        <p id="errorMessage"></p>
+                        <button class="btn btn-primary" onclick="window.orderManager.loadOrders()">再試衁E/button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 注斁E��ード一覧 -->
+            <div class="orders-grid" id="ordersGrid">
+                <!-- 注斁E��ード�EJavaScriptで動的に生�E -->
+            </div>
+
+            <!-- 注斁E��し表示 -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📭</div>
+                <h3>注斁E��ありません</h3>
+                <p>現在表示できる注斁E�Eありません</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 注斁E��細モーダル -->
+    <div class="modal" id="orderDetailModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>注斁E��細</h3>
+                <button class="modal-close" id="modalCloseBtn" aria-label="閉じめE>&times;</button>
+            </div>
+            <div class="modal-body" id="orderDetailBody">
+                <!-- 注斁E��細はJavaScriptで動的に生�E -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancelBtn">閉じめE/button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ト�Eスト通知 -->
+    <div class="toast-container" id="toastContainer">
+        <!-- ト�EストメチE��ージはJavaScriptで動的に生�E -->
+    </div>
+        </div>
+    </main>
+
+    {% include 'includes/store_footer.html' %}
+    </div>
+
+    <script src="/static/js/common.js" defer></script>
+    <script src="/static/js/notification-manager.js"></script>
+    <script src="/static/js/store_orders.js" defer></script>
+</body>
+</html>

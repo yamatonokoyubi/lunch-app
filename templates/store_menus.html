@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メニュー管理 - 弁当注文システム</title>
+    
+    <!-- パフォーマンス最適化: DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/store_common.css">
+    <link rel="stylesheet" href="/static/css/store_menus.css">
+</head>
+<body>
+    <div class="container">
+        {% set active_page = 'menus' %}
+        {% include 'includes/store_header.html' %}
+
+        <main class="main">
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div>
+                        <h2>🍱 メニュー管理</h2>
+                        <p>店舗のメニュー情報を管理</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" id="manageCategoriesBtn">
+                            <span class="btn-icon">📁</span>
+                            カテゴリ管理
+                        </button>
+                        <button class="btn btn-secondary" id="viewAuditLogsBtn">
+                            <span class="btn-icon">📋</span>
+                            監査ログ
+                        </button>
+                        <button class="btn btn-primary" id="addMenuBtn">
+                            <span class="btn-icon">➕</span>
+                            メニュー追加
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ローディングインジケーター -->
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>データを読み込み中...</p>
+            </div>
+
+            <!-- エラーメッセージ表示エリア -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <!-- 検索セクション -->
+            <section class="search-section">
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="search-input" 
+                            placeholder="メニュー名や説明文で検索..."
+                            autocomplete="off"
+                        >
+                        <button id="clearSearchBtn" class="clear-search-btn" style="display: none;">
+                            ✕
+                        </button>
+                    </div>
+                    <div id="searchResultInfo" class="search-result-info" style="display: none;">
+                        <span id="searchResultText"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- フィルタセクション -->
+            <section class="filter-section">
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">
+                        すべて
+                        <span class="filter-count" id="countAll">0</span>
+                    </button>
+                    <button class="filter-btn" data-filter="true">
+                        🟢 公開中
+                        <span class="filter-count" id="countAvailable">0</span>
+                    </button>
+                    <button class="filter-btn" data-filter="false">
+                        🔴 非公開
+                        <span class="filter-count" id="countUnavailable">0</span>
+                    </button>
+                </div>
+
+                <div class="filter-group">
+                    <label for="categoryFilter" class="filter-label">📁 カテゴリ:</label>
+                    <select id="categoryFilter" class="category-filter-select">
+                        <option value="">すべてのカテゴリ</option>
+                        <option value="0">カテゴリなし</option>
+                        <!-- JavaScriptで動的に生成 -->
+                    </select>
+                </div>
+                <div class="filter-info">
+                    <span id="filterInfo">全メニューを表示中</span>
+                </div>
+            </section>
+
+            <!-- 一括操作バー -->
+            <section id="bulkActionBar" class="bulk-action-bar" style="display: none;">
+                <div class="bulk-action-content">
+                    <div class="bulk-action-left">
+                        <span id="selectedCount" class="selected-count">0件選択中</span>
+                        <button id="clearSelectionBtn" class="btn-text">選択解除</button>
+                    </div>
+                    <div class="bulk-action-right">
+                        <button id="bulkAvailableBtn" class="btn btn-success">
+                            🟢 一括公開
+                        </button>
+                        <button id="bulkUnavailableBtn" class="btn btn-danger">
+                            🔴 一括非公開
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- メニュー一覧テーブル -->
+            <section class="table-section">
+                <div class="table-container">
+                    <table class="menu-table">
+                        <thead>
+                            <tr>
+                                <th width="40">
+                                    <input type="checkbox" id="selectAllCheckbox" title="全選択/全解除">
+                                </th>
+                                <th class="sortable" data-sort="id" width="50">
+                                    <button class="sort-btn">
+                                        ID <span class="sort-icon"></span>
+                                    </button>
+                                </th>
+                                <th width="80">画像</th>
+                                <th class="sortable" data-sort="name">
+                                    <button class="sort-btn">
+                                        メニュー名 <span class="sort-icon"></span>
+                                    </button>
+                                </th>
+                                <th width="200">説明</th>
+                                <th class="sortable" data-sort="price" width="120">
+                                    <button class="sort-btn">
+                                        価格 <span class="sort-icon"></span>
+                                    </button>
+                                </th>
+                                <th width="100">ステータス</th>
+                                <th class="sortable" data-sort="created_at" width="150">
+                                    <button class="sort-btn">
+                                        登録日 <span class="sort-icon"></span>
+                                    </button>
+                                </th>
+                                <th class="sortable" data-sort="updated_at" width="150">
+                                    <button class="sort-btn">
+                                        更新日 <span class="sort-icon"></span>
+                                    </button>
+                                </th>
+                                <th width="150">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="menuTableBody">
+                            <!-- JavaScriptで動的に生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- データがない場合のメッセージ -->
+                <div id="emptyMessage" class="empty-message" style="display: none;">
+                    <div class="empty-icon">📭</div>
+                    <h3>メニューがありません</h3>
+                    <p id="emptyMessageText">メニューを追加してください</p>
+                </div>
+            </section>
+
+            <!-- ページネーション -->
+            <section class="pagination-section" id="paginationSection" style="display: none;">
+                <div class="pagination-info">
+                    <span id="paginationInfo">1-20 / 100件</span>
+                </div>
+                <div class="pagination" id="pagination">
+                    <!-- JavaScriptで動的に生成 -->
+                </div>
+                <div class="pagination-controls">
+                    <label for="perPageSelect">表示件数:</label>
+                    <select id="perPageSelect" class="per-page-select">
+                        <option value="10">10件</option>
+                        <option value="20" selected>20件</option>
+                        <option value="50">50件</option>
+                        <option value="100">100件</option>
+                    </select>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast通知 -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- メニュー作成・編集モーダル -->
+    <div id="menuModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">メニュー追加</h3>
+                <button class="modal-close" id="modalCloseBtn">&times;</button>
+            </div>
+            <form id="menuForm" class="modal-form">
+                <input type="hidden" id="menuId" name="id">
+                
+                <div class="form-group">
+                    <label for="menuName" class="form-label required">メニュー名</label>
+                    <input 
+                        type="text" 
+                        id="menuName" 
+                        name="name" 
+                        class="form-input" 
+                        placeholder="例: から揚げ弁当"
+                        required
+                        maxlength="100"
+                    >
+                    <div class="error-message" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="menuDescription" class="form-label">説明</label>
+                    <textarea 
+                        id="menuDescription" 
+                        name="description" 
+                        class="form-textarea" 
+                        placeholder="メニューの詳細説明を入力してください"
+                        rows="4"
+                        maxlength="500"
+                    ></textarea>
+                    <div class="char-count">
+                        <span id="descriptionCharCount">0</span> / 500
+                    </div>
+                    <div class="error-message" id="descriptionError"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="menuPrice" class="form-label required">価格 (円)</label>
+                        <input 
+                            type="number" 
+                            id="menuPrice" 
+                            name="price" 
+                            class="form-input" 
+                            placeholder="500"
+                            required
+                            min="1"
+                            max="100000"
+                            step="1"
+                        >
+                        <div class="error-message" id="priceError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="menuCategory" class="form-label">カテゴリ</label>
+                        <select id="menuCategory" name="category_id" class="form-select">
+                            <option value="">📁 カテゴリなし</option>
+                            <!-- JavaScriptで動的に生成 -->
+                        </select>
+                        <div class="error-message" id="categoryError"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="menuAvailable" class="form-label">ステータス</label>
+                        <select id="menuAvailable" name="is_available" class="form-select">
+                            <option value="true">🟢 公開中</option>
+                            <option value="false">🔴 非公開</option>
+                        </select>
+                        <div class="error-message" id="availableError"></div>
+                    </div>
+                </div>
+
+                <!-- 画像アップロードセクション -->
+                <div class="form-group">
+                    <label class="form-label">メニュー画像</label>
+                    
+                    <!-- ドラッグ&ドロップエリア -->
+                    <div id="imageDropZone" class="image-drop-zone">
+                        <div class="drop-zone-content">
+                            <span class="drop-zone-icon">📷</span>
+                            <p class="drop-zone-text">画像をドラッグ&ドロップ</p>
+                            <p class="drop-zone-subtext">または</p>
+                            <button type="button" class="btn btn-secondary btn-sm" id="selectImageBtn">
+                                ファイルを選択
+                            </button>
+                            <input 
+                                type="file" 
+                                id="menuImageFile" 
+                                accept="image/jpeg,image/png,image/gif,image/webp"
+                                style="display: none;"
+                            >
+                        </div>
+                    </div>
+                    
+                    <!-- 画像プレビュー -->
+                    <div id="imagePreviewContainer" class="image-preview-container" style="display: none;">
+                        <div class="image-preview-wrapper">
+                            <img id="imagePreview" src="" alt="プレビュー" class="image-preview">
+                            <button type="button" class="btn-remove-image" id="removeImageBtn" title="画像を削除">
+                                ✕
+                            </button>
+                        </div>
+                        <p class="image-preview-name" id="imageFileName"></p>
+                    </div>
+                    
+                    <small class="form-hint">
+                        対応形式: JPEG, PNG, GIF, WebP | 最大サイズ: 2MB
+                    </small>
+                    <div class="error-message" id="imageError"></div>
+                </div>
+
+                <!-- 画像URL入力（オプション） -->
+                <div class="form-group">
+                    <label for="menuImageUrl" class="form-label">
+                        画像URL <span class="optional-badge">オプション</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="menuImageUrl" 
+                        name="image_url" 
+                        class="form-input" 
+                        placeholder="https://example.com/image.jpg"
+                        maxlength="500"
+                    >
+                    <small class="form-hint">URLを直接入力する場合はこちら（アップロードが優先されます）</small>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modalCancelBtn">
+                        キャンセル
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="modalSubmitBtn">
+                        <span class="btn-icon">💾</span>
+                        保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 削除確認ダイアログ -->
+    <div id="deleteModal" class="modal delete-modal">
+        <div class="modal-content delete-modal-content">
+            <div class="modal-header delete-modal-header">
+                <h3>⚠️ メニューの削除</h3>
+                <button type="button" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body delete-modal-body">
+                <p class="delete-warning">本当に削除してもよろしいですか？</p>
+                <p class="delete-menu-name" id="deleteMenuName"></p>
+                <div class="delete-info">
+                    <p class="delete-info-text">
+                        <span class="info-icon">ℹ️</span>
+                        注文履歴がある場合は非公開に設定され、履歴がない場合は完全に削除されます。
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer delete-modal-footer">
+                <button type="button" class="btn btn-secondary" id="deleteCancelBtn">
+                    キャンセル
+                </button>
+                <button type="button" class="btn btn-danger" id="deleteConfirmBtn">
+                    <span class="btn-icon">🗑️</span>
+                    削除する
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- カテゴリ管理モーダル -->
+    <div id="categoryManagementModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3>📁 カテゴリ管理</h3>
+                <button type="button" class="modal-close" id="closeCategoryManagementModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- カテゴリ追加ボタン -->
+                <div style="margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary" id="addCategoryBtn">
+                        <span class="btn-icon">➕</span>
+                        カテゴリ追加
+                    </button>
+                </div>
+
+                <!-- カテゴリ一覧 -->
+                <div id="categoryLoadingIndicator" class="loading-indicator" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>読み込み中...</p>
+                </div>
+
+                <div id="categoryErrorMessage" class="error-message" style="display: none;"></div>
+
+                <div id="categoryEmptyMessage" class="empty-message" style="display: none;">
+                    <div class="empty-icon">📁</div>
+                    <h3>カテゴリがありません</h3>
+                    <p>カテゴリを作成してメニューを整理しましょう</p>
+                </div>
+
+                <div id="categoriesList" class="categories-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- カテゴリ作成/編集モーダル -->
+    <div id="categoryModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="categoryModalTitle">カテゴリ作成</h3>
+                <button class="modal-close" id="closeCategoryModal">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="categoryName" class="form-label required">カテゴリ名</label>
+                        <input type="text" id="categoryName" name="name" class="form-input" required maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoryDescription" class="form-label">説明</label>
+                        <textarea id="categoryDescription" name="description" class="form-textarea" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="displayOrder" class="form-label">表示順</label>
+                            <input type="number" id="displayOrder" name="display_order" class="form-input" min="0" value="0">
+                            <small style="color: var(--text-secondary);">数値が小さいほど先に表示されます</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">ステータス</label>
+                            <label class="checkbox-label" style="margin-top: 0.5rem;">
+                                <input type="checkbox" id="categoryIsActive" name="is_active" checked>
+                                <span>有効</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelCategoryBtn">
+                        キャンセル
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitCategoryBtn">
+                        作成
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- カテゴリ削除確認モーダル -->
+    <div id="deleteCategoryModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚠️ カテゴリの削除</h3>
+                <button class="modal-close" id="closeDeleteCategoryModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteCategoryMessage"></p>
+                <div class="delete-info">
+                    <p class="delete-info-text">
+                        <span class="info-icon">ℹ️</span>
+                        このカテゴリに属するメニューは「カテゴリなし」になります。
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteCategoryBtn">
+                    キャンセル
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteCategoryBtn">
+                    <span class="btn-icon">🗑️</span>
+                    削除する
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 監査ログモーダル -->
+    <div id="auditLogModal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>📋 メニュー変更履歴（監査ログ）</h3>
+                <button class="modal-close" id="closeAuditLogModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- フィルター -->
+                <div class="audit-filters">
+                    <div class="filter-group">
+                        <label for="auditActionFilter">操作種別:</label>
+                        <select id="auditActionFilter" class="form-control">
+                            <option value="">すべて</option>
+                            <option value="create">作成</option>
+                            <option value="update">更新</option>
+                            <option value="delete">削除</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="auditStartDate">開始日:</label>
+                        <input type="date" id="auditStartDate" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="auditEndDate">終了日:</label>
+                        <input type="date" id="auditEndDate" class="form-control">
+                    </div>
+                    <button class="btn btn-primary" id="applyAuditFiltersBtn">
+                        <span class="btn-icon">🔍</span>
+                        フィルター適用
+                    </button>
+                    <button class="btn btn-secondary" id="clearAuditFiltersBtn">
+                        クリア
+                    </button>
+                </div>
+
+                <!-- ローディング -->
+                <div id="auditLogLoading" class="loading-indicator" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>履歴を読み込み中...</p>
+                </div>
+
+                <!-- ログ一覧 -->
+                <div id="auditLogList" class="audit-log-list">
+                    <!-- JavaScriptで動的に生成 -->
+                </div>
+
+                <!-- 空メッセージ -->
+                <div id="auditLogEmpty" class="empty-message" style="display: none;">
+                    <div class="empty-icon">📭</div>
+                    <h3>変更履歴がありません</h3>
+                    <p>メニューの変更履歴が記録されていません</p>
+                </div>
+
+                <!-- ページネーション -->
+                <div id="auditLogPagination" class="pagination-section" style="display: none;">
+                    <div class="pagination-info">
+                        <span id="auditPaginationInfo"></span>
+                    </div>
+                    <div class="pagination" id="auditPagination">
+                        <!-- JavaScriptで動的に生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/store_menus.js"></script>
+</body>
+</html>

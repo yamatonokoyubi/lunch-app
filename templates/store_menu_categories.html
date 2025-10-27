@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>繧ｫ繝・ざ繝ｪ邂｡逅・- 蠑∝ｽ捺ｳｨ譁・す繧ｹ繝・Β</title>
+    <link rel="stylesheet" href="/static/css/store_common.css">
+    <link rel="stylesheet" href="/static/css/store_menu_categories.css">
+</head>
+<body>
+    <div class="container">
+        {% set active_page = 'categories' %}
+        {% include 'includes/store_header.html' %}
+    
+        <main class="main">
+            <div class="store-categories-header">
+                <h1>刀 繝｡繝九Η繝ｼ繧ｫ繝・ざ繝ｪ邂｡逅・/h1>
+                <button class="btn btn-primary" id="createCategoryBtn">
+                    筐・繧ｫ繝・ざ繝ｪ霑ｽ蜉
+                </button>
+            </div>
+
+        <!-- 繧ｫ繝・ざ繝ｪ荳隕ｧ -->
+        <div class="categories-container">
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</p>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <div id="emptyMessage" class="empty-message" style="display: none;">
+                <div class="empty-icon">刀</div>
+                <h3>繧ｫ繝・ざ繝ｪ縺後≠繧翫∪縺帙ｓ</h3>
+                <p id="emptyMessageText">繧ｫ繝・ざ繝ｪ繧剃ｽ懈・縺励※繝｡繝九Η繝ｼ繧呈紛逅・＠縺ｾ縺励ｇ縺・/p>
+            </div>
+
+            <div id="categoriesList" class="categories-list"></div>
+        </div>
+    </main>
+
+    <!-- 繧ｫ繝・ざ繝ｪ菴懈・/邱ｨ髮・Δ繝ｼ繝繝ｫ -->
+    <div id="categoryModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">繧ｫ繝・ざ繝ｪ菴懈・</h2>
+                <button class="modal-close" id="closeCategoryModal">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="categoryName">繧ｫ繝・ざ繝ｪ蜷・<span class="required">*</span></label>
+                    <input type="text" id="categoryName" name="name" required maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryDescription">隱ｬ譏・/label>
+                    <textarea id="categoryDescription" name="description" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="displayOrder">陦ｨ遉ｺ鬆・/label>
+                    <input type="number" id="displayOrder" name="display_order" min="0" value="0">
+                    <small>謨ｰ蛟､縺悟ｰ上＆縺・⊇縺ｩ蜈医↓陦ｨ遉ｺ縺輔ｌ縺ｾ縺・/small>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isActive" name="is_active" checked>
+                        <span>譛牙柑</span>
+                    </label>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCategoryBtn">
+                        繧ｭ繝｣繝ｳ繧ｻ繝ｫ
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        菴懈・
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 蜑企勁遒ｺ隱阪Δ繝ｼ繝繝ｫ -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>繧ｫ繝・ざ繝ｪ縺ｮ蜑企勁</h2>
+                <button class="modal-close" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage"></p>
+                <p class="warning-text">
+                    笞・・縺薙・繧ｫ繝・ざ繝ｪ縺ｫ螻槭☆繧九Γ繝九Η繝ｼ縺ｯ縲後き繝・ざ繝ｪ縺ｪ縺励阪↓縺ｪ繧翫∪縺吶・
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">
+                    繧ｭ繝｣繝ｳ繧ｻ繝ｫ
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    蜑企勁縺吶ｋ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast騾夂衍 -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/store_menu_categories.js"></script>
+        </main>
+    </div>
+</body>
+</html>

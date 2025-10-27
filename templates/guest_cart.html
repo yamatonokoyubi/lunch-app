@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カート - 弁当注文システム</title>
+    <link rel="stylesheet" href="/static/css/universal_header.css">
+    <link rel="stylesheet" href="/static/css/guest_cart.css">
+</head>
+<body class="page-cart">
+    <!-- ユニバーサルヘッダー -->
+    {% include "components/universal_header.html" %}
+
+    <div class="container">
+        <!-- ページヘッダー -->
+        <header class="page-header with-card">
+            <h1>🛒 カート</h1>
+            <p class="subtitle">ご注文内容をご確認ください</p>
+        </header>
+
+        <!-- ローディング表示 -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>読み込み中...</p>
+        </div>
+
+        <!-- エラー表示 -->
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <span class="error-icon">⚠️</span>
+            <p id="errorText"></p>
+        </div>
+
+        <!-- 空のカート表示 -->
+        <div class="empty-cart" id="emptyCart" style="display: none;">
+            <div class="empty-icon">🛒</div>
+            <h2>カートは空です</h2>
+            <p>メニューページから商品を追加してください</p>
+            <a href="/menus" class="btn-primary">メニューを見る</a>
+        </div>
+
+        <!-- カート内容 -->
+        <div class="cart-content" id="cartContent" style="display: none;">
+            <!-- 店舗情報 -->
+            <div class="store-info-card" id="storeInfoCard">
+                <div class="store-info-header">
+                    <span class="store-icon">📍</span>
+                    <span class="store-label">受け取り店舗</span>
+                </div>
+                <div class="store-name" id="storeName">読み込み中...</div>
+            </div>
+
+            <!-- カートアイテム一覧 -->
+            <div class="cart-items" id="cartItems">
+                <!-- 動的に生成されます -->
+            </div>
+
+            <!-- 合計金額 -->
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span class="summary-label">小計</span>
+                    <span class="summary-value" id="subtotal">¥0</span>
+                </div>
+                <div class="summary-row total">
+                    <span class="summary-label">合計</span>
+                    <span class="summary-value" id="total">¥0</span>
+                </div>
+            </div>
+
+            <!-- アクションボタン -->
+            <div class="cart-actions">
+                <a href="/menus" class="btn-secondary">メニューに戻る</a>
+                <button class="btn-primary" id="checkoutBtn">
+                    注文手続きへ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- トースト通知 -->
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/universal_header.js"></script>
+    <script src="/static/js/cart_badge.js"></script>
+    <script src="/static/js/guest_cart.js"></script>
+</body>
+</html>

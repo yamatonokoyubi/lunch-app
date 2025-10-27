@@ -1,0 +1,265 @@
+/* 認証画面専用スタイル - auth.css */
+
+/* ページヘッダーは common.css の統一スタイルを使用 */
+
+.auth-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 80px 20px 60px; /* 上部に十分な余白、下部に余白を追加 */
+}
+
+.auth-card {
+    background: white;
+    padding: 40px 32px; /* より広いパディング */
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+}
+
+.auth-logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea; /* 統一カラーに変更 */
+    margin-bottom: 8px;
+}
+
+.auth-title {
+    color: #343a40;
+    margin-bottom: 32px; /* より広い余白 */
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.auth-form {
+    text-align: left;
+}
+
+.auth-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.auth-form .form-control {
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.auth-form .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    transform: translateY(-1px);
+}
+
+.role-selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.role-option {
+    position: relative;
+}
+
+.role-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+.role-label {
+    display: block;
+    padding: 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.role-option input[type="radio"]:checked + .role-label {
+    border-color: #007bff;
+    background-color: #e7f3ff;
+    color: #007bff;
+    font-weight: 600;
+}
+
+.role-label:hover {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.role-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.auth-submit {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.auth-links {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.auth-links p {
+    margin: 0.5rem 0;
+}
+
+.auth-links a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+.demo-accounts {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+}
+
+.demo-accounts h4 {
+    color: #495057;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.demo-account {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.demo-account:last-child {
+    border-bottom: none;
+}
+
+.demo-account-info {
+    font-size: 0.875rem;
+}
+
+.demo-account-type {
+    font-weight: 600;
+    color: #007bff;
+}
+
+.demo-account-credentials {
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.demo-login-btn {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+}
+
+/* ローディング状態 */
+.auth-form.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.auth-form.loading .auth-submit {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* エラー表示 */
+.field-error {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-control.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.25);
+}
+
+/* アニメーション */
+.auth-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* サブタイトル */
+.auth-subtitle {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-top: -1rem;
+    margin-bottom: 2rem;
+}
+
+/* フッター */
+.auth-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.auth-footer .text-muted {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* レスポンシブ */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 10px;
+    }
+    
+    .auth-card {
+        padding: 1.5rem;
+    }
+    
+    .role-selection {
+        grid-template-columns: 1fr;
+    }
+    
+    .demo-accounts {
+        margin-top: 1rem;
+    }
+    
+    .demo-account {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}

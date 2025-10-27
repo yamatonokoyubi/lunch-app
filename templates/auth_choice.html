@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン・新規登録 - 弁当注文システム</title>
+    <link rel="stylesheet" href="/static/css/auth_choice.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    {% include "components/guest_header.html" %}
+
+    <div class="container">
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <h1>🔐 ログイン・新規登録</h1>
+            <p class="subtitle">注文手続きを続けるには、ログインまたは新規登録が必要です</p>
+        </header>
+
+        <!-- カートサマリー -->
+        <div class="cart-summary-card">
+            <div class="summary-header">
+                <span class="cart-icon">🛒</span>
+                <h2>カートの内容</h2>
+            </div>
+            <div class="summary-content" id="cartSummary">
+                <div class="loading-placeholder">
+                    <div class="spinner"></div>
+                    <p>読み込み中...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 認証選択カード -->
+        <div class="auth-choices">
+            <!-- 会員の方 -->
+            <div class="auth-card">
+                <div class="card-header">
+                    <span class="icon">👤</span>
+                    <h2>会員の方</h2>
+                </div>
+                <div class="card-body">
+                    <p class="description">
+                        すでにアカウントをお持ちの方はこちらからログインしてください。
+                    </p>
+                    <ul class="benefits-list">
+                        <li>✓ 注文履歴の確認</li>
+                        <li>✓ お気に入りメニューの保存</li>
+                        <li>✓ スムーズな注文手続き</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="/login?redirect=/checkout/confirm" class="btn btn-primary">
+                        ログイン
+                    </a>
+                </div>
+            </div>
+
+            <!-- 初めての方 -->
+            <div class="auth-card">
+                <div class="card-header">
+                    <span class="icon">✨</span>
+                    <h2>初めての方</h2>
+                </div>
+                <div class="card-body">
+                    <p class="description">
+                        初めてご利用の方は、新規会員登録をお願いします。
+                    </p>
+                    <ul class="benefits-list">
+                        <li>✓ 簡単3ステップで登録完了</li>
+                        <li>✓ 次回からの注文がスムーズ</li>
+                        <li>✓ 特典やクーポンの受け取り</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="/register?redirect=/checkout/confirm" class="btn btn-success">
+                        新規登録
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 戻るボタン -->
+        <div class="back-action">
+            <a href="/cart" class="btn-back">
+                ← カートに戻る
+            </a>
+        </div>
+
+        <!-- 注意事項 -->
+        <div class="notice-card">
+            <div class="notice-header">
+                <span class="notice-icon">ℹ️</span>
+                <h3>ご注意</h3>
+            </div>
+            <ul class="notice-list">
+                <li>ログインまたは新規登録後、自動的に注文確認画面に進みます</li>
+                <li>カート内の商品は保持されますので、ご安心ください</li>
+                <li>個人情報の取り扱いについては<a href="/privacy" class="link">プライバシーポリシー</a>をご確認ください</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- トースト通知 -->
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/js/auth_choice.js"></script>
+</body>
+</html>

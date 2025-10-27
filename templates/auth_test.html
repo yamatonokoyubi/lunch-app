@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認証テスト</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .status {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            background: #f0f0f0;
+        }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; }
+        button {
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔐 認証状態テスト</h1>
+    
+    <div class="status" id="status">
+        <h3>認証状態:</h3>
+        <p id="authStatus">確認中...</p>
+    </div>
+
+    <div>
+        <h3>アクション:</h3>
+        <button onclick="testLogin()">テストログイン (customer1)</button>
+        <button onclick="checkAuth()">認証状態確認</button>
+        <button onclick="testLogout()">ログアウト</button>
+        <button onclick="goToMenus()">メニューページへ</button>
+    </div>
+
+    <div>
+        <h3>ローカルストレージ:</h3>
+        <pre id="localStorage"></pre>
+    </div>
+
+    <div>
+        <h3>ログ:</h3>
+        <pre id="log"></pre>
+    </div>
+
+    <script>
+        let logs = [];
+
+        function addLog(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            logs.push(logEntry);
+            if (data) {
+                logs.push(JSON.stringify(data, null, 2));
+            }
+            updateLogDisplay();
+        }
+
+        function updateLogDisplay() {
+            document.getElementById('log').textContent = logs.join('\n');
+        }
+
+        function updateLocalStorageDisplay() {
+            const storage = {
+                authToken: localStorage.getItem('authToken'),
+                currentUser: localStorage.getItem('currentUser')
+            };
+            document.getElementById('localStorage').textContent = JSON.stringify(storage, null, 2);
+        }
+
+        async function testLogin() {
+            addLog('🔐 ログインテスト開始...');
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'customer1',
+                        password: 'password123'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                addLog('✅ ログイン成功', data);
+
+                // トークンを保存
+                localStorage.setItem('authToken', data.access_token);
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                
+                addLog('💾 トークンを保存しました');
+                updateLocalStorageDisplay();
+                checkAuth();
+
+            } catch (error) {
+                addLog('❌ ログイン失敗: ' + error.message);
+                document.getElementById('status').className = 'status error';
+                document.getElementById('authStatus').textContent = 'ログイン失敗';
+            }
+        }
+
+        async function checkAuth() {
+            addLog('🔍 認証状態を確認中...');
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) {
+                addLog('❌ トークンなし');
+                document.getElementById('status').className = 'status error';
+                document.getElementById('authStatus').textContent = 'ログアウト状態';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const user = await response.json();
+                addLog('✅ 認証成功', user);
+                
+                document.getElementById('status').className = 'status success';
+                document.getElementById('authStatus').innerHTML = `
+                    <strong>ログイン中</strong><br>
+                    ユーザー名: ${user.username}<br>
+                    氏名: ${user.full_name}<br>
+                    メール: ${user.email}<br>
+                    ロール: ${user.role}
+                `;
+
+            } catch (error) {
+                addLog('❌ 認証失敗: ' + error.message);
+                document.getElementById('status').className = 'status error';
+                document.getElementById('authStatus').textContent = '認証失敗（トークン無効？）';
+            }
+
+            updateLocalStorageDisplay();
+        }
+
+        function testLogout() {
+            addLog('🚪 ログアウト実行');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            
+            document.getElementById('status').className = 'status';
+            document.getElementById('authStatus').textContent = 'ログアウトしました';
+            
+            updateLocalStorageDisplay();
+            addLog('✅ ログアウト完了');
+        }
+
+        function goToMenus() {
+            addLog('➡️ メニューページへ遷移');
+            window.location.href = '/menus';
+        }
+
+        // 初回ロード時
+        window.addEventListener('DOMContentLoaded', () => {
+            addLog('📄 ページ読み込み完了');
+            updateLocalStorageDisplay();
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

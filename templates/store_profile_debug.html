@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗情報 デバッグ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .debug-panel h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .log-entry {
+            padding: 8px;
+            margin: 4px 0;
+            border-left: 3px solid #3498db;
+            background: #ecf0f1;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-error {
+            border-left-color: #e74c3c;
+            background: #fadbd8;
+        }
+        .log-success {
+            border-left-color: #27ae60;
+            background: #d5f4e6;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-panel">
+        <h2>🔍 店舗情報UI デバッグツール</h2>
+        <p>このページを使用して、役割ベースのUI動作をテストします。</p>
+        
+        <div class="info-box">
+            <strong>現在のユーザー情報:</strong>
+            <div id="user-info">読込中...</div>
+        </div>
+
+        <div>
+            <h3>テストアクション:</h3>
+            <button onclick="testLoadUserRoles()">1. ユーザー役割を取得</button>
+            <button onclick="testFetchStoresList()">2. 店舗一覧を取得 (Owner)</button>
+            <button onclick="testFetchStoreProfile()">3. 店舗情報を取得</button>
+            <button onclick="testCheckElements()">4. DOM要素を確認</button>
+            <button onclick="clearLogs()">ログをクリア</button>
+        </div>
+    </div>
+
+    <div class="debug-panel">
+        <h2>📋 実行ログ</h2>
+        <div id="log-output"></div>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <script>
+        let logContainer = document.getElementById('log-output');
+        let userInfo = document.getElementById('user-info');
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            if (type === 'error') entry.classList.add('log-error');
+            if (type === 'success') entry.classList.add('log-success');
+            
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function clearLogs() {
+            logContainer.innerHTML = '';
+            log('ログをクリアしました', 'info');
+        }
+
+        async function testLoadUserRoles() {
+            try {
+                log('ユーザー情報を取得中...');
+                const currentUser = await apiClient.getCurrentUser();
+                const roles = currentUser.user_roles.map(ur => ur.role.name);
+                const isOwner = roles.includes('owner');
+                const isManager = roles.includes('manager');
+                const isStaff = roles.includes('staff');
+                
+                userInfo.innerHTML = `
+                    <strong>名前:</strong> ${currentUser.full_name}<br>
+                    <strong>ユーザー名:</strong> ${currentUser.username}<br>
+                    <strong>役割:</strong> ${roles.join(', ')}<br>
+                    <strong>Owner:</strong> ${isOwner ? '✅' : '❌'}<br>
+                    <strong>Manager:</strong> ${isManager ? '✅' : '❌'}<br>
+                    <strong>Staff:</strong> ${isStaff ? '✅' : '❌'}
+                `;
+                
+                log(`✅ ユーザー役割取得成功: ${roles.join(', ')}`, 'success');
+                log(`詳細: Owner=${isOwner}, Manager=${isManager}, Staff=${isStaff}`);
+            } catch (error) {
+                log(`❌ エラー: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        async function testFetchStoresList() {
+            try {
+                log('店舗一覧を取得中 (GET /api/store/stores)...');
+                const response = await apiClient.get('/store/stores');
+                log(`✅ 店舗一覧取得成功: ${response.stores.length}件`, 'success');
+                response.stores.forEach((store, idx) => {
+                    log(`  ${idx + 1}. ${store.name} (ID: ${store.id}, Active: ${store.is_active})`);
+                });
+            } catch (error) {
+                log(`❌ エラー: ${error.message}`, 'error');
+                if (error.message.includes('403')) {
+                    log('⚠️ 403 Forbidden - Owner権限が必要です', 'error');
+                }
+                console.error(error);
+            }
+        }
+
+        async function testFetchStoreProfile() {
+            try {
+                log('店舗情報を取得中 (GET /api/store/profile)...');
+                const response = await apiClient.get('/store/profile');
+                log(`✅ 店舗情報取得成功`, 'success');
+                log(`  店舗名: ${response.name}`);
+                log(`  住所: ${response.address || '未設定'}`);
+                log(`  営業中: ${response.is_active ? '✅' : '❌'}`);
+            } catch (error) {
+                log(`❌ エラー: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        function testCheckElements() {
+            log('DOM要素をチェック中...');
+            
+            const elements = {
+                'store-selector-section': document.getElementById('store-selector-section'),
+                'store-selector': document.getElementById('store-selector'),
+                'store-form': document.getElementById('store-form'),
+                'save-button-section': document.getElementById('save-button-section'),
+                'readonly-message': document.getElementById('readonly-message'),
+                'image-upload-section': document.getElementById('image-upload-section')
+            };
+
+            let allFound = true;
+            for (const [id, element] of Object.entries(elements)) {
+                if (element) {
+                    log(`✅ #${id} 存在する`);
+                    log(`   display: ${element.style.display || 'default'}`);
+                } else {
+                    log(`❌ #${id} が見つかりません`, 'error');
+                    allFound = false;
+                }
+            }
+
+            if (allFound) {
+                log('✅ すべての必須要素が存在します', 'success');
+            } else {
+                log('⚠️ 一部の要素が見つかりません。HTMLを確認してください', 'error');
+            }
+        }
+
+        // 自動実行
+        window.addEventListener('DOMContentLoaded', () => {
+            log('デバッグツール準備完了', 'success');
+            testLoadUserRoles();
+        });
+    </script>
+</body>
+</html>
