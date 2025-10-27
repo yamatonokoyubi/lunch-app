@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アカウント情報</title>
+    <style>
+        :root {
+            --pastel-pink: #FFE4E1;
+            --pastel-blue: #E6F3FF;
+            --pastel-green: #E8F5E9;
+            --text-color: #4A4A4A;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--pastel-blue);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .account-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .info-group {
+            background-color: var(--pastel-pink);
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .info-group:hover {
+            transform: translateY(-2px);
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .password-change {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .password-change a {
+            display: inline-block;
+            background-color: var(--pastel-green);
+            color: #2c3e50;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .password-change a:hover {
+            background-color: #D4E6D4;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .account-container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="account-container">
+        <h1>アカウント情報</h1>
+        
+        <div class="info-group">
+            <div class="info-label">氏名</div>
+            <div class="info-value">{{ user.full_name }}</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">メールアドレス</div>
+            <div class="info-value">{{ user.email }}</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">生年月日</div>
+            <div class="info-value">{{ user.birth_date.strftime('%Y年%m月%d日') }}</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">住所</div>
+            <div class="info-value">{{ user.address }}</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">パスワード</div>
+            <div class="info-value">••••••••</div>
+        </div>
+
+        <div class="password-change">
+            <a href="{{ url_for('change_password') }}">パスワードを変更する</a>
+        </div>
+    </div>
+</body>
+</html>

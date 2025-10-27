@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from database import Base, engine
-from routers import auth, customer, guest_cart, guest_session, public, store
+from routers import auth, customer, guest_cart, guest_session, public, store, account
 
 # データベーステーブルを作成
 Base.metadata.create_all(bind=engine)
@@ -45,6 +45,7 @@ app.include_router(guest_cart.router, prefix="/api")
 app.include_router(guest_session.router, prefix="/api")
 app.include_router(public.router, prefix="/api")
 app.include_router(store.router, prefix="/api")
+app.include_router(account.router)
 
 
 # ===== フロントエンド画面ルーティング =====
