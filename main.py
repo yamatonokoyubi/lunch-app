@@ -45,7 +45,7 @@ app.include_router(guest_cart.router, prefix="/api")
 app.include_router(guest_session.router, prefix="/api")
 app.include_router(public.router, prefix="/api")
 app.include_router(store.router, prefix="/api")
-app.include_router(account.router)
+app.include_router(account.router, prefix="")
 
 
 # ===== フロントエンド画面ルーティング =====
