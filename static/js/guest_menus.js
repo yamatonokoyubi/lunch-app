@@ -214,7 +214,7 @@ function createMenuCard(menu) {
 
     // カテゴリバッジ
     const categoryBadge = menu.category
-        ? `<span class="menu-badge">${escapeHtml(menu.category.name)}</span>`
+        ? createCategoryBadgeHtml(menu.category.name)
         : '';
 
     card.innerHTML = `
@@ -250,6 +250,39 @@ function createMenuCard(menu) {
     `;
 
     return card;
+}
+
+// カテゴリ名からテーマクラスとアイコンを返す
+function getCategoryTheme(name) {
+    if (!name) return { cls: 'category-default', icon: '📁' };
+
+    const map = {
+        'サイドメニュー': { cls: 'category-side', icon: '🥗' },
+        'ヘルシー': { cls: 'category-healthy', icon: '🌿' },
+        '海の幸': { cls: 'category-sea', icon: '🐟' },
+        '定番': { cls: 'category-classic', icon: '⭐' },
+        '肉の彩り': { cls: 'category-meat', icon: '🍖' },
+        '丼もの': { cls: 'category-donburi', icon: '🍚' }
+    };
+
+    // 完全一致がなければ小文字化して部分一致で探す
+    if (map[name]) return map[name];
+
+    for (const key of Object.keys(map)) {
+        if (name.indexOf(key) !== -1) return map[key];
+    }
+
+    return { cls: 'category-default', icon: '📁' };
+}
+
+function createCategoryBadgeHtml(name) {
+    const theme = getCategoryTheme(name);
+    return `
+        <span class="menu-badge ${theme.cls}">
+            <span class="badge-icon">${theme.icon}</span>
+            <span class="badge-text">${escapeHtml(name)}</span>
+        </span>
+    `;
 }
 
 // ========================================
