@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+/* カテゴリバッジ共通スタイル */
+.menu-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px; /* pill */
+  font-family: "Noto Sans JP", system-ui, -apple-system, "Segoe UI", Roboto, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", meiryo, sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(22,24,27,0.08);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.menu-badge .badge-icon {
+  font-size: 1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.menu-badge .badge-text {
+  display: inline-block;
+  transform: translateY(-0.5px); /* 微調整 */
+}
+
+/* テーマ色（薄いグラデーションで質感を出す） */
+.category-side {
+  background: linear-gradient(180deg, #f7efe6 0%, #f3e8da 100%);
+  color: #6b4a2a; /* 濃いベージュの文字色 */
+  box-shadow: 0 2px 6px rgba(107,74,42,0.08);
+  border: 1px solid rgba(107,74,42,0.06);
+}
+
+.category-healthy {
+  background: linear-gradient(180deg, #dff8e6 0%, #d0f0d9 100%);
+  color: #1f7a3a;
+  box-shadow: 0 2px 6px rgba(31,122,58,0.08);
+  border: 1px solid rgba(31,122,58,0.06);
+}
+
+.category-sea {
+  background: linear-gradient(180deg, #e6f4ff 0%, #d7ebff 100%);
+  color: #0b66b3;
+  box-shadow: 0 2px 6px rgba(11,102,179,0.08);
+  border: 1px solid rgba(11,102,179,0.06);
+}
+
+.category-classic {
+  background: linear-gradient(180deg, #f2f4f6 0%, #e9ecef 100%);
+  color: #444b55;
+  box-shadow: 0 2px 6px rgba(68,75,85,0.06);
+  border: 1px solid rgba(68,75,85,0.04);
+}
+
+.category-meat {
+  background: linear-gradient(180deg, #ffeaea 0%, #ffd7d7 100%);
+  color: #8b1d0f;
+  box-shadow: 0 2px 6px rgba(139,29,15,0.08);
+  border: 1px solid rgba(139,29,15,0.06);
+}
+
+.category-donburi {
+  background: linear-gradient(180deg, #fff3e0 0%, #ffe7c2 100%);
+  color: #a85a00;
+  box-shadow: 0 2px 6px rgba(168,90,0,0.08);
+  border: 1px solid rgba(168,90,0,0.06);
+}
+
+.category-default {
+  background: linear-gradient(180deg, #f5f6f7 0%, #eef0f2 100%);
+  color: #374151;
+  box-shadow: 0 1px 3px rgba(55,65,81,0.04);
+  border: 1px solid rgba(55,65,81,0.03);
+}
+
+/* レスポンシブで文字が詰まる時の処置 */
+.menu-badge {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 既存のカテゴリーボタン（.category-btn）や他スタイルとの併用時の微調整 */
+.category-filter .category-btn,
+.categories-list .category-card .category-name {
+  font-family: "Noto Sans JP", sans-serif;
+}
