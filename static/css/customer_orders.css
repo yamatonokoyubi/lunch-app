@@ -12,34 +12,49 @@
     margin-top: 60px !important; /* 固定ヘッダーとの十分な間隔を確保（強制適用） */
 }
 
-/* フィルターセクション */
-.orders-filters {
-    background: white;
-    padding: 1.5rem;
+/* フィルターカード */
+.filter-card {
+    background: #ffffff;
+    padding: 20px 24px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     margin-bottom: 2rem;
+}
+
+/* フィルターフォームのレイアウト */
+.orders-filters {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    gap: 16px; /* PCでの入力欄間隔 */
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 8px; /* ラベルと入力欄の間隔 */
 }
 
 .filter-group label {
     font-weight: 600;
     color: #495057;
-    font-size: 0.875rem;
+    font-size: 14px; /* フォントサイズを14pxに */
 }
 
-.filter-group input[type="date"],
-.filter-group select {
-    width: 100%;
+.filter-group .form-control {
+    font-size: 16px; /* フォントサイズを16pxに */
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
+
+.filter-group .form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 
 /* 注文リスト */
 .orders-list {
@@ -342,6 +357,14 @@
 
 .detail-label {
     font-weight: 500;
+}
+
+/* レスポンシブデザイン - スマートフォン */
+@media (max-width: 768px) {
+    .orders-filters {
+        grid-template-columns: 1fr; /* スマホでは1列に */
+        gap: 12px; /* スマホでの入力欄間隔 */
+    }
 }
 
 /* レスポンシブデザイン - タブレット */
